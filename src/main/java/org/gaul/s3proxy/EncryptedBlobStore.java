@@ -99,7 +99,7 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
     private Blob encryptBlob(String container, Blob blob) {
         try {
             byte[] payload = getByteArrayFromStream(blob);
-            byte[] encrypted = peacemakrSDK.encryptInDomain(payload, "works2");
+            byte[] encrypted = peacemakrSDK.encryptInDomain(payload, "default");
 
             // Now re-build the blob and return it
             return rebuildWithNewPayload(container, blob, encrypted);

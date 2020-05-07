@@ -18,7 +18,6 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,10 +55,7 @@ public final class EncryptedBlobStoreTest {
         properties.put(PROPERTY_PEACEMAKR_API_KEY, "");
         properties.put(PROPERTY_CLIENT_NAME, "encrypted-blob-store-test");
 
-        if (isAPIKeyPresent()) {
-            encryptedBlobStore = EncryptedBlobStore.newEncryptedBlobStore(blobStore, properties);
-        }
-
+        newBlobStore();
     }
 
     @After
@@ -72,7 +68,6 @@ public final class EncryptedBlobStoreTest {
 
     @Test
     public void testCreateBlobGetBlob() throws Exception {
-        Assume.assumeTrue(isAPIKeyPresent());
         String blobName = TestUtils.createRandomBlobName();
         Blob blob = makeBlob(encryptedBlobStore, blobName);
         encryptedBlobStore.putBlob(containerName, blob);
@@ -98,7 +93,6 @@ public final class EncryptedBlobStoreTest {
 
     @Test
     public void testCreateBlobBlobMetadata() throws Exception {
-        Assume.assumeTrue(isAPIKeyPresent());
         String blobName = TestUtils.createRandomBlobName();
         Blob blob = makeBlob(encryptedBlobStore, blobName);
         encryptedBlobStore.putBlob(containerName, blob);
@@ -109,7 +103,6 @@ public final class EncryptedBlobStoreTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void testCreateMultipartBlobGetBlob() throws Exception {
-        Assume.assumeTrue(isAPIKeyPresent());
         BlobMetadata blobMetadata = makeBlob(encryptedBlobStore, TestUtils
             .createRandomBlobName()).getMetadata();
         encryptedBlobStore.initiateMultipartUpload(TestUtils
@@ -147,7 +140,7 @@ public final class EncryptedBlobStoreTest {
             .isEqualTo(ImmutableMap.of("key", "value"));
     }
 
-    private boolean isAPIKeyPresent() {
-        return !properties.getProperty(PROPERTY_PEACEMAKR_API_KEY).isEmpty();
+    private BlobStore newBlobStore() {
+        return encryptedBlobStore = EncryptedBlobStore.newEncryptedBlobStore(blobStore, properties);
     }
 }
