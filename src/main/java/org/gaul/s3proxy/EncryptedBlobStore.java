@@ -1,6 +1,5 @@
 package org.gaul.s3proxy;
 
-import com.google.common.base.Throwables;
 import com.google.common.hash.HashCode;
 import io.peacemakr.crypto.Factory;
 import io.peacemakr.crypto.ICrypto;
@@ -43,7 +42,7 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
             peacemakrSDK = Factory.getCryptoSDK(peacemakrApiKey, clientName, null, new InMemoryPersister(), null);
             peacemakrSDK.register();
         } catch (PeacemakrException e) {
-            Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -104,7 +103,7 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
             // Now re-build the blob and return it
             return rebuildWithNewPayload(container, blob, encrypted);
         } catch (Exception e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -115,7 +114,7 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
 
             return rebuildWithNewPayload(container, blob, decrypted);
         } catch (Exception e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 
