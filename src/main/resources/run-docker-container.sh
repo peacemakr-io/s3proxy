@@ -12,6 +12,10 @@ exec java \
     -Ds3proxy.cors-allow-methods="${S3PROXY_CORS_ALLOW_METHODS}" \
     -Ds3proxy.cors-allow-headers="${S3PROXY_CORS_ALLOW_HEADERS}" \
     -Ds3proxy.ignore-unknown-headers="${S3PROXY_IGNORE_UNKNOWN_HEADERS}" \
+    -Ds3proxy.encrypted-blobstore=${S3PROXY_ENCRYPTED_BLOBSTORE} \
+    -Ds3proxy.peacemakr-api-key=${S3PROXY_PEACEMAKR_API_KEY} \
+    -Ds3proxy.client-name=${S3PROXY_CLIENT_NAME} \
+    -Ds3proxy.peacemakr-use-domain=${S3PROXY_PEACEMAKR_USE_DOMAIN} \
     -Djclouds.provider="${JCLOUDS_PROVIDER}" \
     -Djclouds.identity="${JCLOUDS_IDENTITY}" \
     -Djclouds.credential="${JCLOUDS_CREDENTIAL}" \

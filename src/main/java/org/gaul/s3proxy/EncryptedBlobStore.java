@@ -3,6 +3,7 @@ package org.gaul.s3proxy;
 import com.google.common.hash.HashCode;
 import io.peacemakr.crypto.Factory;
 import io.peacemakr.crypto.ICrypto;
+import io.peacemakr.crypto.exception.CoreCryptoException;
 import io.peacemakr.crypto.exception.PeacemakrException;
 import io.peacemakr.crypto.impl.persister.InMemoryPersister;
 import org.jclouds.blobstore.BlobStore;
@@ -25,8 +26,9 @@ import java.util.List;
 import java.util.Properties;
 
 public final class EncryptedBlobStore extends ForwardingBlobStore {
-    private ICrypto peacemakrSDK;
-
+    private final ICrypto peacemakrSDK;
+    // Could be null if the property is not specified
+    private final String useDomain;
     private EncryptedBlobStore(BlobStore blobStore, Properties properties) {
         super(blobStore);
 
@@ -34,6 +36,7 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
 
         String peacemakrApiKey = properties.getProperty(S3ProxyConstants.PROPERTY_PEACEMAKR_API_KEY);
         String clientName = properties.getProperty(S3ProxyConstants.PROPERTY_CLIENT_NAME);
+        useDomain = properties.getProperty(S3ProxyConstants.PROPERTY_PEACEMAKR_USE_DOMAIN);
         if (clientName.isEmpty()) {
             clientName = "s3proxy" + properties.getProperty(S3ProxyConstants.PROPERTY_IDENTITY);
         }
@@ -98,7 +101,16 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
     private Blob encryptBlob(String container, Blob blob) {
         try {
             byte[] payload = getByteArrayFromStream(blob);
-            byte[] encrypted = peacemakrSDK.encryptInDomain(payload, "default");
+            byte[] encrypted = null;
+            if (useDomain != null && !useDomain.isEmpty()) {
+                encrypted = peacemakrSDK.encryptInDomain(payload, useDomain);
+            } else {
+                encrypted = peacemakrSDK.encrypt(payload);
+            }
+
+            if (encrypted == null) {
+                throw new CoreCryptoException("unable to encrypt data in use domain: " + useDomain);
+            }
 
             // Now re-build the blob and return it
             return rebuildWithNewPayload(container, blob, encrypted);
