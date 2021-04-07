@@ -15,6 +15,7 @@ exec java \
     -Ds3proxy.encrypted-blobstore=${S3PROXY_ENCRYPTED_BLOBSTORE} \
     -Ds3proxy.peacemakr-api-key=${S3PROXY_PEACEMAKR_API_KEY} \
     -Ds3proxy.client-name=${S3PROXY_CLIENT_NAME} \
+    -Ds3proxy.peacemakr-use-domain=${S3PROXY_PEACEMAKR_USE_DOMAIN} \
     -Djclouds.provider=${JCLOUDS_PROVIDER} \
     -Djclouds.identity=${JCLOUDS_IDENTITY} \
     -Djclouds.credential=${JCLOUDS_CREDENTIAL} \
