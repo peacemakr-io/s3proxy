@@ -342,8 +342,8 @@
     <!-- Required for EncryptedBlobStore -->
     <dependency>
       <groupId>io.peacemakr</groupId>
-      <artifactId>peacemakr-java-sdk-jdk7</artifactId>
-      <version>0.0.2</version>
+      <artifactId>peacemakr-java-sdk</artifactId>
+      <version>0.0.4</version>
     </dependency>
 
     <dependency>
