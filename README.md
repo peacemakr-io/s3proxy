@@ -68,6 +68,61 @@ $ curl http://localhost:8080/
 Maven Central hosts S3Proxy artifacts and the wiki has
 [instructions on Java use](https://github.com/gaul/s3proxy/wiki/Using-S3Proxy-in-Java-projects).
 
+## Usage of Encrypted Blob Store
+- build docker image:
+```aidl
+docker build -t s3proxy . 
+```
+- get Peacemakr test org API key:
+```aidl
+https://api.peacemakr.io/api/v1/org/key/test
+```
+- run docker:
+```aidl
+docker run -p 8080:80 \
+-e S3PROXY_AUTHORIZATION='none' \
+-e S3PROXY_ENCRYPTED_BLOBSTORE='true' \
+-e S3PROXY_PEACEMAKR_API_KEY='SQTCdQxcHqLciaWJ2nEQeAEnDb/i6LQjq0RZeqXwcGM=' \
+-e JCLOUDS_PROVIDER='aws-s3' \
+-e JCLOUDS_ENDPOINT='https://<bucketname>.s3.<region>.amazonaws.com/' \
+-e JCLOUDS_REGIONS='<region>' \
+-e JCLOUDS_IDENTITY='<s3identity>' \
+-e JCLOUDS_CREDENTIAL='<s3credentials>' \
+s3proxy
+```
+### Usage example:
+- Generate a test object 'secret.txt':
+```aidl
+echo "Hello world" > /tmp/secret.txt
+```
+-  PUT object in s3 via proxy:
+```aidl
+curl -X PUT -T "/tmp/secret.txt" \
+  -H "$(date -R)" \
+  -H "Content-Type: text/*" \
+  http://127.0.0.1:8080/<bucketName>/secret.txt
+```
+- GET and decrypt object from the bucket via the proxy:
+```aidl
+curl -X GET \
+  -H "$(date -R)" \
+  -H "Content-Type: text/*" \
+  http://127.0.0.1:8080/<bucketname>/secret.txt -o /tmp/decrypted_secret.txt
+cat /tmp/decrypted_secret.txt
+```
+- DELETE object from s3:
+```aidl
+curl -X DELETE \
+  -H "$(date -R)" \
+  -H "Content-Type: text/*" \
+  http://127.0.0.1:8080/<bucketname>/secret.txt
+```
+
+### Run unit tests with Peacemakr's test org API key:
+```aidl
+mvn clean install -DusePeacemakrTestOrg=true 
+```
+
 ## Supported storage backends
 
 * atmos

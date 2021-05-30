@@ -1,11 +1,15 @@
+// CHECKSTYLE:OFF
 package org.gaul.s3proxy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
+
 import com.google.common.hash.HashCode;
-import io.peacemakr.crypto.Factory;
-import io.peacemakr.crypto.ICrypto;
-import io.peacemakr.crypto.exception.CoreCryptoException;
-import io.peacemakr.crypto.exception.PeacemakrException;
-import io.peacemakr.crypto.impl.persister.InMemoryPersister;
+
+import org.apache.log4j.BasicConfigurator;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
@@ -16,16 +20,19 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.util.ForwardingBlobStore;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.BasicConfigurator;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
+import io.peacemakr.crypto.Factory;
+import io.peacemakr.crypto.ICrypto;
+import io.peacemakr.crypto.exception.CoreCryptoException;
+import io.peacemakr.crypto.exception.PeacemakrException;
+import io.peacemakr.crypto.impl.persister.InMemoryPersister;
 
 public final class EncryptedBlobStore extends ForwardingBlobStore {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EncryptedBlobStore.class);
+
     private final ICrypto peacemakrSDK;
     // Could be null if the property is not specified
     private final String useDomain;
@@ -126,7 +133,8 @@ public final class EncryptedBlobStore extends ForwardingBlobStore {
 
             return rebuildWithNewPayload(container, blob, decrypted);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            LOGGER.warn("Not a Peacemakr blob", e);
+            return blob;
         }
     }
 

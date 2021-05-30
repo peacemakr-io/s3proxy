@@ -1,4 +1,12 @@
+// CHECKSTYLE:OFF
 package org.gaul.s3proxy;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.gaul.s3proxy.S3ProxyConstants.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -6,6 +14,7 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
 import com.google.inject.Module;
+
 import org.assertj.core.api.Fail;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
@@ -21,17 +30,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.gaul.s3proxy.S3ProxyConstants.*;
-
 public final class EncryptedBlobStoreTest {
     private static final int BYTE_SOURCE_SIZE = 1024;
     private static final ByteSource BYTE_SOURCE = TestUtils.randomByteSource()
         .slice(0, BYTE_SOURCE_SIZE);
+    private static final String peacemakrTestOrgAPIKey = "SQTCdQxcHqLciaWJ2nEQeAEnDb/i6LQjq0RZeqXwcGM=";
     private BlobStoreContext context;
     private BlobStore blobStore;
     private String containerName;
@@ -40,6 +43,8 @@ public final class EncryptedBlobStoreTest {
 
     @Before
     public void setUp() throws Exception {
+        String peacemakrAPIAuthKey =
+            Boolean.parseBoolean(System.getProperty("usePeacemakrTestOrg")) ? peacemakrTestOrgAPIKey : "";
         containerName = TestUtils.createRandomContainerName();
 
         context = ContextBuilder
@@ -52,7 +57,7 @@ public final class EncryptedBlobStoreTest {
 
         properties = new Properties();
         properties.put(PROPERTY_ENCRYPTED_BLOBSTORE, "true");
-        properties.put(PROPERTY_PEACEMAKR_API_KEY, "");
+        properties.put(PROPERTY_PEACEMAKR_API_KEY, peacemakrAPIAuthKey);
         properties.put(PROPERTY_CLIENT_NAME, "encrypted-blob-store-test");
 
         newBlobStore();
