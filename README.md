@@ -73,16 +73,12 @@ Maven Central hosts S3Proxy artifacts and the wiki has
 ```aidl
 docker build -t s3proxy . 
 ```
-- get Peacemakr test org API key:
-```aidl
-https://api.peacemakr.io/api/v1/org/key/test
-```
-- run docker:
+- run docker with Peacemakr's Demo API Key (use your own API Key after signing up!):
 ```aidl
 docker run -p 8080:80 \
 -e S3PROXY_AUTHORIZATION='none' \
 -e S3PROXY_ENCRYPTED_BLOBSTORE='true' \
--e S3PROXY_PEACEMAKR_API_KEY='SQTCdQxcHqLciaWJ2nEQeAEnDb/i6LQjq0RZeqXwcGM=' \
+-e S3PROXY_PEACEMAKR_API_KEY='d1Maw58P2xCQ8d0GV15n22SQNI6lYXHzWLCTEvNPHnY=' \
 -e JCLOUDS_PROVIDER='aws-s3' \
 -e JCLOUDS_ENDPOINT='https://<bucketname>.s3.<region>.amazonaws.com/' \
 -e JCLOUDS_REGIONS='<region>' \
