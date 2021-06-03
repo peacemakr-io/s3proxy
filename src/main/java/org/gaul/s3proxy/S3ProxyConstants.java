@@ -84,7 +84,16 @@ public final class S3ProxyConstants {
     /** Prevent mutations. */
     public static final String PROPERTY_READ_ONLY_BLOBSTORE =
             "s3proxy.read-only-blobstore";
-
+    /** Encrypt data. */
+    public static final String PROPERTY_ENCRYPTED_BLOBSTORE =
+        "s3proxy.encrypted-blobstore";
+    /** Peacemakr API Key. */
+    public static final String PROPERTY_PEACEMAKR_API_KEY =
+        "s3proxy.peacemakr-api-key";
+    public static final String PROPERTY_CLIENT_NAME = "s3proxy.client-name";
+    /** Peacemakr use domain to be used for encryption. */
+    public static final String PROPERTY_PEACEMAKR_USE_DOMAIN =
+        "s3proxy.peacemakr-use-domain";
     /** Maximum time skew allowed in signed requests. */
     public static final String PROPERTY_MAXIMUM_TIME_SKEW =
             "s3proxy.maximum-timeskew";
