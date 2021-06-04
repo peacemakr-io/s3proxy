@@ -34,7 +34,7 @@ public final class EncryptedBlobStoreTest {
     private static final int BYTE_SOURCE_SIZE = 1024;
     private static final ByteSource BYTE_SOURCE = TestUtils.randomByteSource()
         .slice(0, BYTE_SOURCE_SIZE);
-    private static final String peacemakrTestOrgAPIKey = "SQTCdQxcHqLciaWJ2nEQeAEnDb/i6LQjq0RZeqXwcGM=";
+    private static final String peacemakrTestOrgAPIKey = "d1Maw58P2xCQ8d0GV15n22SQNI6lYXHzWLCTEvNPHnY=";
     private BlobStoreContext context;
     private BlobStore blobStore;
     private String containerName;
